@@ -1,0 +1,306 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-08T09:20:47Z"
+    generateName: yunikorn-admission-controller-79fb96857-
+    labels:
+      app: yunikorn
+      component: yunikorn-admission-controller
+      pod-template-hash: 79fb96857
+      release: yunikorn
+    name: yunikorn-admission-controller-79fb96857-vmtkv
+    namespace: yunikorn
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: yunikorn-admission-controller-79fb96857
+      uid: b2668091-d4a0-4a0c-9ddf-5ba2bbdd4688
+    resourceVersion: "1934538"
+    selfLink: /api/v1/namespaces/yunikorn/pods/yunikorn-admission-controller-79fb96857-vmtkv
+    uid: d8b9efaa-1a4a-4486-97b6-d000138ecd74
+  spec:
+    containers:
+    - env:
+      - name: POLICY_GROUP
+        value: queues
+      - name: ADMISSION_CONTROLLER_SERVICE
+        value: yunikorn-admission-controller-service
+      - name: ADMISSION_CONTROLLER_PROCESS_NAMESPACES
+      - name: ADMISSION_CONTROLLER_BYPASS_NAMESPACES
+        value: ^kube-system$
+      - name: ADMISSION_CONTROLLER_LABEL_NAMESPACES
+      - name: ADMISSION_CONTROLLER_NO_LABEL_NAMESPACES
+      - name: SCHEDULER_SERVICE_ADDRESS
+        value: yunikorn-service:9080
+      - name: ENABLE_CONFIG_HOT_REFRESH
+        value: "true"
+      - name: ADMISSION_CONTROLLER_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      image: apache/yunikorn:admission-latest
+      imagePullPolicy: Never
+      name: yunikorn-admission-controller
+      ports:
+      - containerPort: 9089
+        hostPort: 9089
+        name: webhook-api
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: webhook-api
+          scheme: HTTPS
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: "1"
+          memory: 2G
+        requests:
+          cpu: "1"
+          memory: 2G
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /run/secrets/webhook
+        name: admission-controller-secrets
+        readOnly: true
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: yunikorn-admission-controller-token-dgd69
+        readOnly: true
+    dnsPolicy: ClusterFirstWithHostNet
+    enableServiceLinks: true
+    hostNetwork: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: yunikorn-admission-controller
+    serviceAccountName: yunikorn-admission-controller
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: admission-controller-secrets
+      secret:
+        defaultMode: 420
+        secretName: admission-controller-secrets
+    - name: yunikorn-admission-controller-token-dgd69
+      secret:
+        defaultMode: 420
+        secretName: yunikorn-admission-controller-token-dgd69
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:20:47Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:21:31Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:21:31Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:20:47Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://87b1ad32635b5d13ff8c882cc880a127f997a00767525ba0eb5ba84eecce1273
+      image: apache/yunikorn:admission-latest
+      imageID: docker://sha256:a09785c2a61d73a71b2e034e9176ec82c981ea374d00e2b921a2aa2e1aa22960
+      lastState: {}
+      name: yunikorn-admission-controller
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-08T09:20:52Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 120.108.205.162
+    podIPs:
+    - ip: 120.108.205.162
+    qosClass: Guaranteed
+    startTime: "2022-07-08T09:20:47Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-08T09:20:47Z"
+    generateName: yunikorn-scheduler-c7579799d-
+    labels:
+      app: yunikorn
+      component: yunikorn-scheduler
+      pod-template-hash: c7579799d
+      release: yunikorn
+    name: yunikorn-scheduler-c7579799d-7sr6h
+    namespace: yunikorn
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: yunikorn-scheduler-c7579799d
+      uid: 9ecdab03-5361-4143-8ede-77545eb55118
+    resourceVersion: "1934231"
+    selfLink: /api/v1/namespaces/yunikorn/pods/yunikorn-scheduler-c7579799d-7sr6h
+    uid: 40c1e61b-d2a5-4c94-954e-5f1d96efa2e8
+  spec:
+    containers:
+    - env:
+      - name: NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: SERVICE_ACCOUNT_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: spec.serviceAccountName
+      - name: USER_LABEL_KEY
+      - name: OPERATOR_PLUGINS
+        value: general
+      - name: PLACEHOLDER_IMAGE
+        value: k8s.gcr.io/pause
+      image: apache/yunikorn:scheduler-latest
+      imagePullPolicy: Never
+      name: yunikorn-scheduler-k8s
+      ports:
+      - containerPort: 9080
+        name: http1
+        protocol: TCP
+      resources:
+        limits:
+          cpu: "4"
+          memory: 4Gi
+        requests:
+          cpu: "4"
+          memory: 4Gi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/yunikorn/
+        name: config-volume
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: yunikorn-admin-token-dqzvf
+        readOnly: true
+    - image: apache/yunikorn:web-latest
+      imagePullPolicy: Never
+      name: yunikorn-scheduler-web
+      ports:
+      - containerPort: 9889
+        name: http2
+        protocol: TCP
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: yunikorn-admin-token-dqzvf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: yunikorn-admin
+    serviceAccountName: yunikorn-admin
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: yunikorn-configs
+      name: config-volume
+    - name: yunikorn-admin-token-dqzvf
+      secret:
+        defaultMode: 420
+        secretName: yunikorn-admin-token-dqzvf
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:20:47Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:20:54Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:20:54Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-08T09:20:47Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://718c0497b97cb272e2cd38741d1b2e8e6283443f79e18d779f586255be9cba1b
+      image: apache/yunikorn:scheduler-latest
+      imageID: docker://sha256:4fd9f89cb1d4d564be3e95f304e92235a3facf7a65fd8ff84df13dd3b183d34d
+      lastState: {}
+      name: yunikorn-scheduler-k8s
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-08T09:20:52Z"
+    - containerID: docker://fcd3a6533067d38131763ba6407ca056372b21f3843b857b29490457545ace93
+      image: apache/yunikorn:web-latest
+      imageID: docker://sha256:67b2d3e83c4d2c363ea43916cb836e3f0be0b4f12f96ff4fbc8137f37787d725
+      lastState: {}
+      name: yunikorn-scheduler-web
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-08T09:20:53Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.238
+    podIPs:
+    - ip: 10.244.0.238
+    qosClass: Burstable
+    startTime: "2022-07-08T09:20:47Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
