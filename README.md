@@ -1,6 +1,6 @@
-# Mod
+# ModCancel changes
 
-## Admin + Yunikorn(20220702/mod/0702, 64 is from 20220708modv1)
+## Admin + Yunikorn(20220702/mod/0702)
 Num | WaitToRun time | Running |
 | - |       -      |     -   |
 | 2 | 5s | 548s |
@@ -8,7 +8,7 @@ Num | WaitToRun time | Running |
 | 8 | 6s | 388s |
 | 16| 7s | 429s |
 | 32| 10s | 462s |
-| 64| 13s | 448s |
+| 64| 17s | 499s |
 
 ## Yunikorn(20220705/0705)
  
