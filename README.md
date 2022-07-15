@@ -21,6 +21,17 @@ Num | WaitToRun time | Running |
 | 32| 18s | 480s |
 | 64| 16s | 452s |
 
+## Yunikorn(20220705/0715)
+ 
+Num | WaitToRun time | Running |
+| - |       -      |     -   |
+| 2 | 9s | 516s |
+| 4 | 9s | 441s |
+| 8 | 9s | 463s |
+| 16| 11s | 486s |
+| 32| 10s | 514s |
+| 64| 15s | 484s |
+
 # Orin(20220702/orin/0701)
 
 Num | WaitToRun time | Running |
