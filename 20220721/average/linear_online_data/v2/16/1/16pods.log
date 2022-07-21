@@ -1,0 +1,4163 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:53Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      job-role: master
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "0"
+      pytorch-replica-type: master
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-master-0
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214172"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-master-0
+    uid: 722c2875-1ea8-4aa6-bd52-f48c0115577f
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: localhost
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "0"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      ports:
+      - containerPort: 23456
+        name: pytorchjob-port
+        protocol: TCP
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade04-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://5f5fc2e90f5f585bdcd10d0b9a18aff4072d51b68c87649063b45fa932b77b1d
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://5f5fc2e90f5f585bdcd10d0b9a18aff4072d51b68c87649063b45fa932b77b1d
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:00Z"
+    hostIP: 120.108.205.164
+    phase: Succeeded
+    podIP: 10.244.1.250
+    podIPs:
+    - ip: 10.244.1.250
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:53Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-pytorchjob-ddp-example-agent
+    namespace: default
+    resourceVersion: "3214193"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-pytorchjob-ddp-example-agent
+    uid: 5fe993fd-5aed-4fe0-b898-14b33a8a4380
+  spec:
+    containers:
+    - env:
+      - name: CUSTOM_RESOURCE_TYPE
+        value: PyTorchJob
+      - name: CUSTOM_RESOURCE_NAME
+        value: ddp-example
+      - name: NAMESPACE
+        value: default
+      - name: SERVER_HOST
+        value: submarine-server
+      - name: SERVER_PORT
+        value: "8080"
+      - name: CUSTOM_RESOURCE_ID
+        value: experiment-1657850955816-0028
+      image: apache/submarine:agent-0.7.0
+      imagePullPolicy: IfNotPresent
+      name: agent
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade11-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:23Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:23Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://991085ddf6a8c67c0958a89a6d8487d2cce797a0ff4c376ae564be85a3dee06d
+      image: apache/submarine:agent-0.7.0
+      imageID: docker-pullable://apache/submarine@sha256:9c14c62478786eb9d7bbe74ca1aed48cd6ae4cb318bd9da149456926cd5c6474
+      lastState: {}
+      name: agent
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://991085ddf6a8c67c0958a89a6d8487d2cce797a0ff4c376ae564be85a3dee06d
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:21Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:26:59Z"
+    hostIP: 120.108.205.169
+    phase: Succeeded
+    podIP: 10.244.5.9
+    podIPs:
+    - ip: 10.244.5.9
+    qosClass: BestEffort
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:53Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "0"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-0
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214209"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-0
+    uid: b60a5c6b-cdfa-4eed-9c96-e8a0fad5d4ce
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "1"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade11-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:30Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:28Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:28Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://f08d4c8a69c4a9065de337acfd9acf4f3b133851735739866bc0846f747baf92
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://f08d4c8a69c4a9065de337acfd9acf4f3b133851735739866bc0846f747baf92
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:27Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:32Z"
+    hostIP: 120.108.205.169
+    initContainerStatuses:
+    - containerID: docker://457de5a9fec428344998fa2291e3fcf241c991339fc29cf3fc16c2ab017ce129
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://457de5a9fec428344998fa2291e3fcf241c991339fc29cf3fc16c2ab017ce129
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:29Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:26:59Z"
+    phase: Succeeded
+    podIP: 10.244.5.8
+    podIPs:
+    - ip: 10.244.5.8
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:53Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "1"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-1
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214183"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-1
+    uid: e8010389-19d9-4451-a488-352e1148679a
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "2"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade06-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:31Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://0669ed771e1f233af26ef7c55578a4193c4a91527afa7a592e9a2e9d51ce8e3c
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://0669ed771e1f233af26ef7c55578a4193c4a91527afa7a592e9a2e9d51ce8e3c
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:32Z"
+    hostIP: 120.108.205.166
+    initContainerStatuses:
+    - containerID: docker://c256cc51e853700427e22c37ded3593802308d0d6aaa76748ff0d83ce8104b3b
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://c256cc51e853700427e22c37ded3593802308d0d6aaa76748ff0d83ce8104b3b
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:30Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:02Z"
+    phase: Succeeded
+    podIP: 10.244.3.48
+    podIPs:
+    - ip: 10.244.3.48
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:56Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "10"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-10
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214188"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-10
+    uid: 005f69eb-574a-423f-ab17-8c580e897e67
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "11"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade05-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:31Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:22Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:22Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:56Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://9403ef907e4d9c670d8ebd4fd66ffc3a6b903ad7851d32d95d8dcd14417a3ad1
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://9403ef907e4d9c670d8ebd4fd66ffc3a6b903ad7851d32d95d8dcd14417a3ad1
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:21Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:32Z"
+    hostIP: 120.108.205.165
+    initContainerStatuses:
+    - containerID: docker://f8f63b8c158d4e28620b1ec728082c9b21ea6e8bea26e7ee18918570d7b9d76e
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://f8f63b8c158d4e28620b1ec728082c9b21ea6e8bea26e7ee18918570d7b9d76e
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:30Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:00Z"
+    phase: Succeeded
+    podIP: 10.244.2.34
+    podIPs:
+    - ip: 10.244.2.34
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:56Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:56Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "11"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-11
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214167"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-11
+    uid: f3bf2e8b-0eb3-4e78-b634-2635a3744d79
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "12"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade04-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:31Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:57Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://73c742144f3121e5ba73166048bc6a158826f9607342ca9620100696dfe08923
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://73c742144f3121e5ba73166048bc6a158826f9607342ca9620100696dfe08923
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:32Z"
+    hostIP: 120.108.205.164
+    initContainerStatuses:
+    - containerID: docker://ea20ffcb76bf2d8a273e6d7bea1dda4fe75394b5b28a320696135038d6c809ba
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://ea20ffcb76bf2d8a273e6d7bea1dda4fe75394b5b28a320696135038d6c809ba
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:30Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:02Z"
+    phase: Succeeded
+    podIP: 10.244.1.251
+    podIPs:
+    - ip: 10.244.1.251
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:57Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:57Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "12"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-12
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214187"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-12
+    uid: 31def91a-ac13-4b05-9fde-271371c497a4
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "13"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade06-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:32Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:22Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:22Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:57Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://38445da37ded59dbd4d2de0002f53c19a7c0ee69301659f41b3536d6d6e0a6f7
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://38445da37ded59dbd4d2de0002f53c19a7c0ee69301659f41b3536d6d6e0a6f7
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:21Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:33Z"
+    hostIP: 120.108.205.166
+    initContainerStatuses:
+    - containerID: docker://de827cf4f63516c6fb353f7d2bde365daaf3cfb76045d27b37ebe14f37bf9260
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://de827cf4f63516c6fb353f7d2bde365daaf3cfb76045d27b37ebe14f37bf9260
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:31Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:03Z"
+    phase: Succeeded
+    podIP: 10.244.3.49
+    podIPs:
+    - ip: 10.244.3.49
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:57Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:57Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "13"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-13
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214218"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-13
+    uid: c8f75587-c660-4fb1-b8e3-64179e019a2a
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "14"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade11-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:33Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:29Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:29Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:57Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://69616409c0e286ca0ac4c157eb0317da5cea87b91971e71b20faf516bf59e252
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://69616409c0e286ca0ac4c157eb0317da5cea87b91971e71b20faf516bf59e252
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:28Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:33Z"
+    hostIP: 120.108.205.169
+    initContainerStatuses:
+    - containerID: docker://d2a6505686d945fe63b62b50b2cc55c47924259a5f2d5044bbf591880b31b5fb
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://d2a6505686d945fe63b62b50b2cc55c47924259a5f2d5044bbf591880b31b5fb
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:31Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:01Z"
+    phase: Succeeded
+    podIP: 10.244.5.10
+    podIPs:
+    - ip: 10.244.5.10
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:57Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:57Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "14"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-14
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214185"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-14
+    uid: 7806ec17-6c31-4d1f-8111-aee7c2767ab1
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "15"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade05-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:31Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:58Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://dcac949e99dd7a784ef1acf4a6362405e9105cec3c66ff6d0ce2c28f84a28392
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://dcac949e99dd7a784ef1acf4a6362405e9105cec3c66ff6d0ce2c28f84a28392
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:21Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:32Z"
+    hostIP: 120.108.205.165
+    initContainerStatuses:
+    - containerID: docker://769281f1e04ba9a5c2bccf9bb4ef4af917a7faf9952ea39a942adf1320923edf
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://769281f1e04ba9a5c2bccf9bb4ef4af917a7faf9952ea39a942adf1320923edf
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:30Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:02Z"
+    phase: Succeeded
+    podIP: 10.244.2.35
+    podIPs:
+    - ip: 10.244.2.35
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:58Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:53Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "2"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-2
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214195"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-2
+    uid: 454c4512-b6f9-4433-853c-b3d115f0fc57
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "3"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade05-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:33Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:23Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:23Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://47465775f48b42fe9bb5f48598993ae38de0737a2809e68b2b362210bb863397
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://47465775f48b42fe9bb5f48598993ae38de0737a2809e68b2b362210bb863397
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:23Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:34Z"
+    hostIP: 120.108.205.165
+    initContainerStatuses:
+    - containerID: docker://8e2ddb3fdae17443770a77f727f0786d511acfdd5200db164085a4140a53c7fa
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://8e2ddb3fdae17443770a77f727f0786d511acfdd5200db164085a4140a53c7fa
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:32Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:00Z"
+    phase: Succeeded
+    podIP: 10.244.2.32
+    podIPs:
+    - ip: 10.244.2.32
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:53Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "3"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-3
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214177"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-3
+    uid: e7bc840f-9f6b-4ff6-a790-22d58a4d0c2e
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "4"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade07-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:30Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://7914b1de69ca57a81e11f14df82503d33dc4d8a9e596a203c3f0df95538fbdcc
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://7914b1de69ca57a81e11f14df82503d33dc4d8a9e596a203c3f0df95538fbdcc
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:30Z"
+    hostIP: 120.108.205.167
+    initContainerStatuses:
+    - containerID: docker://78d06e8c87c246d7a6631f5b6de0b3688a12bdcb53af7d91be642aa0fef78169
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://78d06e8c87c246d7a6631f5b6de0b3688a12bdcb53af7d91be642aa0fef78169
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:29Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:01Z"
+    phase: Succeeded
+    podIP: 10.244.4.11
+    podIPs:
+    - ip: 10.244.4.11
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:54Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "4"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-4
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214181"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-4
+    uid: 91424ce1-73d5-4a6d-8a41-7c97818ea20b
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "5"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade06-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:30Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://fb3f354b1177e01981f185deb0359c149bf617c513e6645580887b2c0c9aec69
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://fb3f354b1177e01981f185deb0359c149bf617c513e6645580887b2c0c9aec69
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:31Z"
+    hostIP: 120.108.205.166
+    initContainerStatuses:
+    - containerID: docker://e64d4ec2ab3823cd9933eedad8a75e3992b700504f931c839556c0a33caf1be7
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://e64d4ec2ab3823cd9933eedad8a75e3992b700504f931c839556c0a33caf1be7
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:29Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:01Z"
+    phase: Succeeded
+    podIP: 10.244.3.46
+    podIPs:
+    - ip: 10.244.3.46
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:54Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "5"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-5
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214173"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-5
+    uid: 8841d60a-b2cd-4e09-9ee1-d1b16c0a711a
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "6"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade07-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:33Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://077d74e05b1de83d26284aafc1f4db14c7ed2b7b358d2929f64e9607b1bd306f
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://077d74e05b1de83d26284aafc1f4db14c7ed2b7b358d2929f64e9607b1bd306f
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:34Z"
+    hostIP: 120.108.205.167
+    initContainerStatuses:
+    - containerID: docker://2fe40a3bb3a31ad70de73c147530c616a8c4c391c480f15fb7b6c3fdfc5c15dc
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://2fe40a3bb3a31ad70de73c147530c616a8c4c391c480f15fb7b6c3fdfc5c15dc
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:31Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:01Z"
+    phase: Succeeded
+    podIP: 10.244.4.13
+    podIPs:
+    - ip: 10.244.4.13
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:54Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "6"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-6
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214184"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-6
+    uid: da7b9645-d691-4b75-85ac-1f76ef1cabc1
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "7"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade05-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:31Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://49ea340c5d7860e1a87fe67e0b86b491e9953f71c498bc6e8cb658b5f7881c56
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://49ea340c5d7860e1a87fe67e0b86b491e9953f71c498bc6e8cb658b5f7881c56
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:21Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:32Z"
+    hostIP: 120.108.205.165
+    initContainerStatuses:
+    - containerID: docker://1f0064a17e3f8e812e19cd61970a9b396efe4d1996ac8a303e0fe73fe8330de9
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://1f0064a17e3f8e812e19cd61970a9b396efe4d1996ac8a303e0fe73fe8330de9
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:30Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:00Z"
+    phase: Succeeded
+    podIP: 10.244.2.33
+    podIPs:
+    - ip: 10.244.2.33
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:55Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "7"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-7
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214179"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-7
+    uid: 76cb7c27-a541-4532-a981-52251543501c
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "8"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade06-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:32Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://4454d686010153813e5bf8035f0b1cc987e4cde0cb90a632528e3563bf034244
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://4454d686010153813e5bf8035f0b1cc987e4cde0cb90a632528e3563bf034244
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:33Z"
+    hostIP: 120.108.205.166
+    initContainerStatuses:
+    - containerID: docker://ee907014c2ac782239f275fcca16bf3d47de9edec6f6ebbb7cb354cded365e52
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://ee907014c2ac782239f275fcca16bf3d47de9edec6f6ebbb7cb354cded365e52
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:31Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:01Z"
+    phase: Succeeded
+    podIP: 10.244.3.47
+    podIPs:
+    - ip: 10.244.3.47
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:55Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "8"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-8
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214169"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-8
+    uid: 726546fa-3bb5-40d7-9474-9da955890568
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "9"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade04-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:30Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://8477dfac0905035857801c8e3390c7902c0bf5ddca90a446db76649bf62ba4a8
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://8477dfac0905035857801c8e3390c7902c0bf5ddca90a446db76649bf62ba4a8
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:20Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:31Z"
+    hostIP: 120.108.205.164
+    initContainerStatuses:
+    - containerID: docker://adfefb95b9e21cb0dc057ca53059901bc05af3c463749dafce0a340929fb2e98
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://adfefb95b9e21cb0dc057ca53059901bc05af3c463749dafce0a340929fb2e98
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:29Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:26:59Z"
+    phase: Succeeded
+    podIP: 10.244.1.249
+    podIPs:
+    - ip: 10.244.1.249
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:55Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-16T03:26:56Z"
+    labels:
+      applicationId: pytorch_job_20200521_001
+      controller-name: pytorch-operator
+      group-name: kubeflow.org
+      job-name: experiment-1657850955816-0028
+      pytorch-job-name: experiment-1657850955816-0028
+      pytorch-replica-index: "9"
+      pytorch-replica-type: worker
+      queue: root.sandbox
+    name: experiment-1657850955816-0028-worker-9
+    namespace: default
+    ownerReferences:
+    - apiVersion: kubeflow.org/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: PyTorchJob
+      name: experiment-1657850955816-0028
+      uid: 391979b2-5e1d-4b9d-812d-d6439d022b1f
+    resourceVersion: "3214180"
+    selfLink: /api/v1/namespaces/default/pods/experiment-1657850955816-0028-worker-9
+    uid: 94ec3e19-b602-4d49-9b08-481c8379d9f7
+  spec:
+    containers:
+    - command:
+      - python
+      - /opt/mnist_distributed.py
+      env:
+      - name: ENV_1
+        value: ENV1
+      - name: JOB_ID
+        value: experiment-1657850955816-0028
+      - name: SUBMARINE_TRACKING_URI
+        value: mysql+pymysql://submarine:password@submarine-database:3306/submarine
+      - name: SUBMARINE_TENSORBOARD_LOG_DIR
+        value: /logs/mylog
+      - name: MASTER_PORT
+        value: "23456"
+      - name: MASTER_ADDR
+        value: experiment-1657850955816-0028-master-0
+      - name: WORLD_SIZE
+        value: "16"
+      - name: RANK
+        value: "10"
+      - name: PYTHONUNBUFFERED
+        value: "0"
+      image: 0yukali0/ddp:0.7.0
+      imagePullPolicy: IfNotPresent
+      name: pytorch
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1024M
+        requests:
+          cpu: "1"
+          memory: 512M
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard/ddp-example
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nslookup experiment-1657850955816-0028-master-0; do echo waiting for
+        master; sleep 2; done;
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-pytorch
+      resources:
+        limits:
+          cpu: 100m
+          memory: 20Mi
+        requests:
+          cpu: 50m
+          memory: 10Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-b7w6w
+        readOnly: true
+    nodeName: blade07-k205-lab
+    priority: 0
+    restartPolicy: OnFailure
+    schedulerName: yunikorn
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: default-token-b7w6w
+      secret:
+        defaultMode: 420
+        secretName: default-token-b7w6w
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:27:33Z"
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:35:21Z"
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-16T03:26:56Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://0321cb8c1405f06187e37224cf258a3bf7ea6e06a81bcb66f3b070b00518e694
+      image: 0yukali0/ddp:0.7.0
+      imageID: docker-pullable://0yukali0/ddp@sha256:193719eeedea6112ef263a11adfc18f5721d5bf76ac16b6f1d2f51271ead2250
+      lastState: {}
+      name: pytorch
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://0321cb8c1405f06187e37224cf258a3bf7ea6e06a81bcb66f3b070b00518e694
+          exitCode: 0
+          finishedAt: "2022-07-16T03:35:21Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:34Z"
+    hostIP: 120.108.205.167
+    initContainerStatuses:
+    - containerID: docker://1cd3c75e5db49bef2e0516639c2fd16ad124d64896b592621ff43a7799cf882b
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:451eee8bedcb2f029756dc3e9d73bab0e7943c1ac55cff3a4861c52a0fdd3e98
+      lastState: {}
+      name: init-pytorch
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://1cd3c75e5db49bef2e0516639c2fd16ad124d64896b592621ff43a7799cf882b
+          exitCode: 0
+          finishedAt: "2022-07-16T03:27:31Z"
+          reason: Completed
+          startedAt: "2022-07-16T03:27:01Z"
+    phase: Succeeded
+    podIP: 10.244.4.12
+    podIPs:
+    - ip: 10.244.4.12
+    qosClass: Burstable
+    startTime: "2022-07-16T03:26:56Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      sidecar.istio.io/inject: "false"
+    creationTimestamp: "2022-07-15T02:03:00Z"
+    generateName: notebook-controller-deployment-58797bdd75-
+    labels:
+      app: notebook-controller
+      pod-template-hash: 58797bdd75
+    name: notebook-controller-deployment-58797bdd75-5n2b8
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: notebook-controller-deployment-58797bdd75
+      uid: e7bd4120-9f7a-481a-a2f0-f3cce3d7f56d
+    resourceVersion: "2884381"
+    selfLink: /api/v1/namespaces/default/pods/notebook-controller-deployment-58797bdd75-5n2b8
+    uid: 528fb425-700f-4967-9a74-b3b4bc5a564c
+  spec:
+    containers:
+    - command:
+      - /manager
+      env:
+      - name: USE_ISTIO
+        value: "false"
+      image: apache/submarine:notebook-controller-v1.1.0-g253890cb
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /metrics
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 30
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: manager
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: notebook-controller-service-account-token-4l56d
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: notebook-controller-service-account
+    serviceAccountName: notebook-controller-service-account
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: notebook-controller-service-account-token-4l56d
+      secret:
+        defaultMode: 420
+        secretName: notebook-controller-service-account-token-4l56d
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:10Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:10Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://933ddcd6fdb09375c2d28af26f7cd60f7f851a96fbc6e840e8335ac950205701
+      image: apache/submarine:notebook-controller-v1.1.0-g253890cb
+      imageID: docker-pullable://apache/submarine@sha256:5a03bed92f63637e9fbfb0b9fa5c5a77f604296ab5834216b476b9bc6fcfbe22
+      lastState: {}
+      name: manager
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:03:08Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.3
+    podIPs:
+    - ip: 10.244.0.3
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:03:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:03:00Z"
+    generateName: pytorch-operator-75fd845678-
+    labels:
+      name: pytorch-operator
+      pod-template-hash: 75fd845678
+    name: pytorch-operator-75fd845678-zkdwg
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: pytorch-operator-75fd845678
+      uid: 6afa8042-d6b8-4fc0-8279-943ffd6aaa4c
+    resourceVersion: "2884386"
+    selfLink: /api/v1/namespaces/default/pods/pytorch-operator-75fd845678-zkdwg
+    uid: 4be71f05-7f7c-491a-9853-4e8490fa9de8
+  spec:
+    containers:
+    - command:
+      - /pytorch-operator.v1
+      - --alsologtostderr
+      - -v=1
+      - --monitoring-port=8443
+      env:
+      - name: MY_POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: MY_POD_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.name
+      image: apache/submarine:pytorch-operator-v1.1.0-gd596e904
+      imagePullPolicy: IfNotPresent
+      name: pytorch-operator
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: pytorch-operator-token-4gwwh
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: pytorch-operator
+    serviceAccountName: pytorch-operator
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: pytorch-operator-token-4gwwh
+      secret:
+        defaultMode: 420
+        secretName: pytorch-operator-token-4gwwh
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:11Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:11Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://e847abdc76f86b4ece2a2bb6ad0a9ef8c4c7ae198c048183ef3394396b98d7e8
+      image: apache/submarine:pytorch-operator-v1.1.0-gd596e904
+      imageID: docker-pullable://apache/submarine@sha256:4471cc57e2960644d75ddfd401e01019838525b211d279247eddf5f1d95961f2
+      lastState: {}
+      name: pytorch-operator
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:03:07Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.2
+    podIPs:
+    - ip: 10.244.0.2
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:03:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:08:43Z"
+    generateName: submarine-database-
+    labels:
+      app: submarine-database
+      controller-revision-hash: submarine-database-7fdc7d487
+      statefulset.kubernetes.io/pod-name: submarine-database-0
+    name: submarine-database-0
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: StatefulSet
+      name: submarine-database
+      uid: 8cf1d6ef-a288-4783-bba3-0872b1aa6fe9
+    resourceVersion: "2886176"
+    selfLink: /api/v1/namespaces/default/pods/submarine-database-0
+    uid: 439457a0-61ac-4c5f-bbf3-fe5accd5e72d
+  spec:
+    containers:
+    - env:
+      - name: MYSQL_ROOT_PASSWORD
+        value: password
+      image: apache/submarine:database-0.7.0
+      imagePullPolicy: IfNotPresent
+      name: submarine-database
+      ports:
+      - containerPort: 3306
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        tcpSocket:
+          port: 3306
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/lib/mysql
+        name: volume
+        subPath: submarine-database
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-storage-token-bz9g7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostname: submarine-database-0
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: submarine-storage
+    serviceAccountName: submarine-storage
+    subdomain: submarine-database
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-database-pvc
+    - name: submarine-storage-token-bz9g7
+      secret:
+        defaultMode: 420
+        secretName: submarine-storage-token-bz9g7
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:43Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:09:03Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:09:03Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:43Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://298cb540c5d82f5a9bba431ccb89d7231399b84a5d34ae95b32b09da518507b3
+      image: apache/submarine:database-0.7.0
+      imageID: docker://sha256:28c0c566466957642b4e292ae875b57ba09d53080757ad2b79534198f223bf34
+      lastState: {}
+      name: submarine-database
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:08:51Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.9
+    podIPs:
+    - ip: 10.244.0.9
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:08:43Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:08:44Z"
+    generateName: submarine-minio-556d9f6594-
+    labels:
+      app: submarine-minio
+      pod-template-hash: 556d9f6594
+    name: submarine-minio-556d9f6594-w55tm
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: submarine-minio-556d9f6594
+      uid: 932615c7-8b35-4957-bd85-af4fcf03fddd
+    resourceVersion: "2886166"
+    selfLink: /api/v1/namespaces/default/pods/submarine-minio-556d9f6594-w55tm
+    uid: dc2f73d6-f39e-4df0-a959-bd719f184a0b
+  spec:
+    containers:
+    - args:
+      - server
+      - /data
+      env:
+      - name: MINIO_ACCESS_KEY
+        value: submarine_minio
+      - name: MINIO_SECRET_KEY
+        value: submarine_minio
+      image: minio/minio:RELEASE.2021-02-14T04-01-33Z
+      imagePullPolicy: IfNotPresent
+      name: submarine-minio-container
+      ports:
+      - containerPort: 9000
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data
+        name: volume
+        subPath: submarine-minio
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-storage-token-bz9g7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: submarine-storage
+    serviceAccountName: submarine-storage
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-minio-pvc
+    - name: submarine-storage-token-bz9g7
+      secret:
+        defaultMode: 420
+        secretName: submarine-storage-token-bz9g7
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:45Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:56Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:56Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:44Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://c8016647995c9cf03eab9dcbc052d9288951a2a9ece109a30dd7d6b1b984e754
+      image: minio/minio:RELEASE.2021-02-14T04-01-33Z
+      imageID: docker-pullable://minio/minio@sha256:bd11edda91f30cd94060c80e6d496ca406d46d2de356f59904f721cdfd0b1d63
+      lastState: {}
+      name: submarine-minio-container
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:08:55Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.12
+    podIPs:
+    - ip: 10.244.0.12
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:08:45Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:08:43Z"
+    generateName: submarine-mlflow-69548d8c96-
+    labels:
+      app: submarine-mlflow
+      pod-template-hash: 69548d8c96
+    name: submarine-mlflow-69548d8c96-pq7ll
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: submarine-mlflow-69548d8c96
+      uid: 1692aab2-ff92-4702-9ff9-fe6acd1cc661
+    resourceVersion: "2886488"
+    selfLink: /api/v1/namespaces/default/pods/submarine-mlflow-69548d8c96-pq7ll
+    uid: 2346ec2a-e51d-43ad-adbd-f5e2ea4386f6
+  spec:
+    containers:
+    - image: apache/submarine:mlflow-0.7.0
+      imagePullPolicy: IfNotPresent
+      name: submarine-mlflow-container
+      ports:
+      - containerPort: 5000
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        tcpSocket:
+          port: 5000
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-mlflow
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-storage-token-bz9g7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nc -z submarine-database 3306; do echo waiting for database connection;
+        sleep 20; done
+      image: busybox:1.28
+      imagePullPolicy: IfNotPresent
+      name: check-database-connection
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-storage-token-bz9g7
+        readOnly: true
+    - command:
+      - /bin/bash
+      - -c
+      - 'cnt=0; while ! /bin/bash -c ''mc --config-dir /root/.mc config host add minio
+        http://submarine-minio-service:9000 submarine_minio submarine_minio'' 2>&1;
+        do sleep 15; ((cnt=cnt+1)); if [ $cnt -eq 80 ];then echo ''ERROR: wait too
+        long for minio pod''; exit 1; fi; done; if /bin/bash -c ''mc --config-dir
+        /root/.mc ls minio/mlflow'' >/dev/null 2>&1; then echo ''Bucket minio/mlflow
+        already exists, skipping creation.''; else /bin/bash -c ''mc --config-dir
+        /root/.mc mb minio/mlflow''; fi;'
+      image: minio/mc
+      imagePullPolicy: Always
+      name: submarine-mlflow-initcontainer
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /root/.mc
+        name: mc-config-vol
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-storage-token-bz9g7
+        readOnly: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: submarine-storage
+    serviceAccountName: submarine-storage
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-mlflow-pvc
+    - emptyDir: {}
+      name: mc-config-vol
+    - name: submarine-storage-token-bz9g7
+      secret:
+        defaultMode: 420
+        secretName: submarine-storage-token-bz9g7
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:09:19Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:10:21Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:10:21Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:44Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://6a8f2bb94e0bc87b5fe91c4bdba955d31ba2176517fa5df0babc5891b24927be
+      image: apache/submarine:mlflow-0.7.0
+      imageID: docker-pullable://apache/submarine@sha256:3cc868ef73793119206ed57340f80cf3d321f41b6315f8e02f98596a4180525d
+      lastState: {}
+      name: submarine-mlflow-container
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:09:21Z"
+    hostIP: 120.108.205.162
+    initContainerStatuses:
+    - containerID: docker://5b26bf8a3c2a2665be87958c8797f971d8e02a9360a2f42e44b165958dfcc52d
+      image: busybox:1.28
+      imageID: docker-pullable://busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47
+      lastState: {}
+      name: check-database-connection
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://5b26bf8a3c2a2665be87958c8797f971d8e02a9360a2f42e44b165958dfcc52d
+          exitCode: 0
+          finishedAt: "2022-07-15T02:09:13Z"
+          reason: Completed
+          startedAt: "2022-07-15T02:08:53Z"
+    - containerID: docker://e4704b139ec4856d63eff4f1027cb268cc9dc46ae9eb98c8b21b175f8b9b670a
+      image: minio/mc:latest
+      imageID: docker-pullable://minio/mc@sha256:b9742b3ca2a892656ca65022b909c3e8ebf66961b9ddc486c6f3101f95373901
+      lastState: {}
+      name: submarine-mlflow-initcontainer
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://e4704b139ec4856d63eff4f1027cb268cc9dc46ae9eb98c8b21b175f8b9b670a
+          exitCode: 0
+          finishedAt: "2022-07-15T02:09:18Z"
+          reason: Completed
+          startedAt: "2022-07-15T02:09:18Z"
+    phase: Running
+    podIP: 10.244.0.13
+    podIPs:
+    - ip: 10.244.0.13
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:08:44Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      timestamp: 2022-07-14 22:02:58.928097121 -0400 EDT m=+3.185384492
+    creationTimestamp: "2022-07-15T02:03:00Z"
+    generateName: submarine-operator-5d588fcb58-
+    labels:
+      app: submarine-operator
+      pod-template-hash: 5d588fcb58
+    name: submarine-operator-5d588fcb58-5d2pf
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: submarine-operator-5d588fcb58
+      uid: 45a3197b-bb11-4523-a6ca-dc6d44057436
+    resourceVersion: "2884377"
+    selfLink: /api/v1/namespaces/default/pods/submarine-operator-5d588fcb58-5d2pf
+    uid: c7bbc146-499d-437e-a84b-05c8c63e1f12
+  spec:
+    containers:
+    - env:
+      - name: SUBMARINE_POD_SECURITY_POLICY_ENABLE
+        value: "true"
+      - name: SUBMARINE_CLUSTER_TYPE
+        value: kubernetes
+      image: apache/submarine:operator-0.7.0
+      imagePullPolicy: IfNotPresent
+      name: submarine-operator
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-operator-token-26fbb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: submarine-operator
+    serviceAccountName: submarine-operator
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: submarine-operator-token-26fbb
+      secret:
+        defaultMode: 420
+        secretName: submarine-operator-token-26fbb
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:09Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:09Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://cd0ed53e05e651b01ee62c3521434526a5ef0a2c218fce844230d6d59d128622
+      image: apache/submarine:operator-0.7.0
+      imageID: docker-pullable://apache/submarine@sha256:cd8b9a3c1e4a367ecf9df45e4ea8e78b9be0d347db5a70b3910cca87e73c4f28
+      lastState: {}
+      name: submarine-operator
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:03:07Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.254
+    podIPs:
+    - ip: 10.244.0.254
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:03:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:08:43Z"
+    generateName: submarine-server-78c5df747c-
+    labels:
+      app: submarine-server
+      pod-template-hash: 78c5df747c
+    name: submarine-server-78c5df747c-28h5w
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: submarine-server-78c5df747c
+      uid: 8db9c463-4c6c-4ccb-a419-9222fc604984
+    resourceVersion: "2886238"
+    selfLink: /api/v1/namespaces/default/pods/submarine-server-78c5df747c-28h5w
+    uid: 1add8a44-926c-4875-85b3-74c6d7a07a29
+  spec:
+    containers:
+    - env:
+      - name: SUBMARINE_SERVER_PORT
+        value: "8080"
+      - name: SUBMARINE_SERVER_PORT_8080_TCP
+        value: "8080"
+      - name: K8S_APISERVER_URL
+        value: kubernetes.default.svc
+      - name: SUBMARINE_SERVER_DNS_NAME
+        value: submarine-server.default
+      - name: ENV_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: SUBMARINE_APIVERSION
+        value: submarine.apache.org/v1alpha1
+      - name: SUBMARINE_KIND
+        value: Submarine
+      - name: SUBMARINE_NAME
+        value: example-submarine
+      - name: SUBMARINE_UID
+        value: ef388bec-85d8-4778-aa93-3b8834bf30a1
+      image: apache/submarine:server-0.7.0
+      imagePullPolicy: IfNotPresent
+      name: submarine-server
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-server-token-8ghjp
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - /bin/bash
+      - -c
+      - 'cnt=0; while ! /bin/bash -c ''mc --config-dir /root/.mc config host add minio
+        http://submarine-minio-service:9000 submarine_minio submarine_minio'' 2>&1;
+        do sleep 15; ((cnt=cnt+1)); if [ $cnt -eq 80 ];then echo ''ERROR: wait too
+        long for minio pod''; exit 1; fi; done; if /bin/bash -c ''mc --config-dir
+        /root/.mc ls minio/submarine'' >/dev/null 2>&1; then echo ''Bucket minio/submarine
+        already exists, skipping creation.''; else /bin/bash -c ''mc --config-dir
+        /root/.mc mb minio/submarine''; fi;'
+      image: minio/mc
+      imagePullPolicy: Always
+      name: submarine-server-initcontainer
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /root/.mc
+        name: mc-config-vol
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-server-token-8ghjp
+        readOnly: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: submarine-server
+    serviceAccountName: submarine-server
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir: {}
+      name: mc-config-vol
+    - name: submarine-server-token-8ghjp
+      secret:
+        defaultMode: 420
+        secretName: submarine-server-token-8ghjp
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:09:14Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:09:16Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:09:16Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:43Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://ba71e881b4d9f896b6a0a04ba249ca97054b8a23700fe90dace4164b11948632
+      image: apache/submarine:server-0.7.0
+      imageID: docker://sha256:3373b9ff445cb2728d7c52b9131ca91cfd5eb74e7f36669f1452b63abdfdee27
+      lastState: {}
+      name: submarine-server
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:09:15Z"
+    hostIP: 120.108.205.162
+    initContainerStatuses:
+    - containerID: docker://6c059f17d1952d15a8e143706f612e92533e6f8ea13ad5d445f570b17a19460a
+      image: minio/mc:latest
+      imageID: docker-pullable://minio/mc@sha256:b9742b3ca2a892656ca65022b909c3e8ebf66961b9ddc486c6f3101f95373901
+      lastState: {}
+      name: submarine-server-initcontainer
+      ready: true
+      restartCount: 0
+      state:
+        terminated:
+          containerID: docker://6c059f17d1952d15a8e143706f612e92533e6f8ea13ad5d445f570b17a19460a
+          exitCode: 0
+          finishedAt: "2022-07-15T02:09:13Z"
+          reason: Completed
+          startedAt: "2022-07-15T02:08:55Z"
+    phase: Running
+    podIP: 10.244.0.11
+    podIPs:
+    - ip: 10.244.0.11
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:08:43Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:08:43Z"
+    generateName: submarine-tensorboard-5c6df48f4d-
+    labels:
+      app: submarine-tensorboard
+      pod-template-hash: 5c6df48f4d
+    name: submarine-tensorboard-5c6df48f4d-htr9n
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: submarine-tensorboard-5c6df48f4d
+      uid: dc497401-2d06-468a-88ba-dcbdf37a9154
+    resourceVersion: "3216994"
+    selfLink: /api/v1/namespaces/default/pods/submarine-tensorboard-5c6df48f4d-htr9n
+    uid: 52b4f593-720d-4704-a0a6-c358679f49ea
+  spec:
+    containers:
+    - command:
+      - tensorboard
+      - --logdir=/logs
+      - --path_prefix=/tensorboard
+      image: tensorflow/tensorflow:1.11.0
+      imagePullPolicy: IfNotPresent
+      name: submarine-tensorboard-container
+      ports:
+      - containerPort: 6006
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        tcpSocket:
+          port: 6006
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /logs
+        name: volume
+        subPath: submarine-tensorboard
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-storage-token-bz9g7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: submarine-storage
+    serviceAccountName: submarine-storage
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: submarine-tensorboard-pvc
+    - name: submarine-storage-token-bz9g7
+      secret:
+        defaultMode: 420
+        secretName: submarine-storage-token-bz9g7
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:43Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:43Z"
+      message: 'containers with unready status: [submarine-tensorboard-container]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:43Z"
+      message: 'containers with unready status: [submarine-tensorboard-container]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:08:43Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://a51a90d98c5ac900712a990f68874ce755205c069b1d3543c8c5465a2e7bf83b
+      image: tensorflow/tensorflow:1.11.0
+      imageID: docker-pullable://tensorflow/tensorflow@sha256:d281f434df9538eb103924245918c56434cd7d89a5d8925b8318a50be936a52e
+      lastState:
+        terminated:
+          containerID: docker://a51a90d98c5ac900712a990f68874ce755205c069b1d3543c8c5465a2e7bf83b
+          exitCode: 132
+          finishedAt: "2022-07-16T03:49:01Z"
+          reason: Error
+          startedAt: "2022-07-16T03:49:01Z"
+      name: submarine-tensorboard-container
+      ready: false
+      restartCount: 305
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=submarine-tensorboard-container
+            pod=submarine-tensorboard-5c6df48f4d-htr9n_default(52b4f593-720d-4704-a0a6-c358679f49ea)
+          reason: CrashLoopBackOff
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.10
+    podIPs:
+    - ip: 10.244.0.10
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:08:43Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:03:00Z"
+    generateName: submarine-traefik-d55c689b5-
+    labels:
+      app.kubernetes.io/instance: submarine
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: traefik
+      helm.sh/chart: traefik-9.1.0
+      pod-template-hash: d55c689b5
+    name: submarine-traefik-d55c689b5-5ndzx
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: submarine-traefik-d55c689b5
+      uid: c5ab45ea-b160-466b-9742-0fb44ba0d881
+    resourceVersion: "2884418"
+    selfLink: /api/v1/namespaces/default/pods/submarine-traefik-d55c689b5-5ndzx
+    uid: 4c3fa8b9-0887-4eb5-a93c-0087c4cd24d9
+  spec:
+    containers:
+    - args:
+      - --global.checknewversion
+      - --global.sendanonymoususage
+      - --entryPoints.traefik.address=:9000/tcp
+      - --entryPoints.web.address=:8000/tcp
+      - --entryPoints.websecure.address=:8443/tcp
+      - --api.dashboard=true
+      - --ping=true
+      - --providers.kubernetescrd
+      - --providers.kubernetesingress
+      image: traefik:2.2.8
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /ping
+          port: 9000
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 2
+      name: submarine-traefik
+      ports:
+      - containerPort: 9000
+        name: traefik
+        protocol: TCP
+      - containerPort: 8000
+        name: web
+        protocol: TCP
+      - containerPort: 8443
+        name: websecure
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 1
+        httpGet:
+          path: /ping
+          port: 9000
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 2
+      resources: {}
+      securityContext:
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data
+        name: data
+      - mountPath: /tmp
+        name: tmp
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: submarine-traefik-token-5fcwc
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 65532
+    serviceAccount: submarine-traefik
+    serviceAccountName: submarine-traefik
+    terminationGracePeriodSeconds: 60
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir: {}
+      name: data
+    - emptyDir: {}
+      name: tmp
+    - name: submarine-traefik-token-5fcwc
+      secret:
+        defaultMode: 420
+        secretName: submarine-traefik-token-5fcwc
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:21Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:21Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://2d18b9b7d7ad69473794612f5ece15aaf69816898b0b41a4e4e5ee8993537b9e
+      image: traefik:2.2.8
+      imageID: docker-pullable://traefik@sha256:f5af5a5ce17fc3e353b507e8acce65d7f28126408a8c92dc3cac246d023dc9e8
+      lastState: {}
+      name: submarine-traefik
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:03:10Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.5
+    podIPs:
+    - ip: 10.244.0.5
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:03:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-15T02:03:00Z"
+    generateName: tf-job-operator-598686fd84-
+    labels:
+      app: tf-job-operator
+      name: tf-job-operator
+      pod-template-hash: 598686fd84
+    name: tf-job-operator-598686fd84-xm6pj
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tf-job-operator-598686fd84
+      uid: e90ec8de-00a7-4a54-b4f0-157864750940
+    resourceVersion: "2884374"
+    selfLink: /api/v1/namespaces/default/pods/tf-job-operator-598686fd84-xm6pj
+    uid: d9d45113-d1ab-4564-9ab4-cb3fb3e5f4a7
+  spec:
+    containers:
+    - args:
+      - --alsologtostderr
+      - -v=1
+      - --monitoring-port=8443
+      env:
+      - name: MY_POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: MY_POD_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.name
+      image: apache/submarine:tf_operator-v1.1.0-g92389064
+      imagePullPolicy: IfNotPresent
+      name: tf-job-operator
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: tf-job-operator-token-jt2jf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: tf-job-operator
+    serviceAccountName: tf-job-operator
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: tf-job-operator-token-jt2jf
+      secret:
+        defaultMode: 420
+        secretName: tf-job-operator-token-jt2jf
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:09Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:09Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-15T02:03:00Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://0f5f187fa664f8720e9c2612fcfac2c4f12058c49c677ad51f02e6a37ef078ee
+      image: apache/submarine:tf_operator-v1.1.0-g92389064
+      imageID: docker-pullable://apache/submarine@sha256:bf455b1cc183b6537f8cf7446e105e3a6e8154123a28298b1a2234c0ab0a3de6
+      lastState: {}
+      name: tf-job-operator
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-15T02:03:08Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.4
+    podIPs:
+    - ip: 10.244.0.4
+    qosClass: BestEffort
+    startTime: "2022-07-15T02:03:00Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

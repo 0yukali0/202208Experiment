@@ -1,0 +1,128 @@
+Name:         experiment-1658207605530-0005
+Namespace:    default
+Labels:       submarine-experiment-name=ddp-example
+Annotations:  <none>
+API Version:  kubeflow.org/v1
+Kind:         PyTorchJob
+Metadata:
+  Creation Timestamp:  2022-07-19T05:59:54Z
+  Generation:          1
+  Owner References:
+    API Version:           submarine.apache.org/v1alpha1
+    Block Owner Deletion:  true
+    Controller:            true
+    Kind:                  Submarine
+    Name:                  example-submarine
+    UID:                   b9247a35-671d-48c9-a1fc-1799832c36ad
+  Resource Version:        4141336
+  Self Link:               /apis/kubeflow.org/v1/namespaces/default/pytorchjobs/experiment-1658207605530-0005
+  UID:                     52913f20-c9f0-4582-b092-efe619a9c438
+Spec:
+  Backoff Limit:  3
+  Pytorch Replica Specs:
+    Master:
+      Replicas:        1
+      Restart Policy:  OnFailure
+      Template:
+        Spec:
+          Containers:
+            Command:
+              python
+              /opt/mnist_distributed.py
+            Env:
+              Name:   ENV_1
+              Value:  ENV1
+              Name:   JOB_ID
+              Value:  experiment-1658207605530-0005
+              Name:   SUBMARINE_TRACKING_URI
+              Value:  mysql+pymysql://submarine:password@submarine-database:3306/submarine
+              Name:   SUBMARINE_TENSORBOARD_LOG_DIR
+              Value:  /logs/mylog
+            Image:    0yukali0/ddp:0.7.0_nn_data
+            Name:     pytorch
+            Resources:
+              Limits:
+                Cpu:     1
+                Memory:  1024M
+              Requests:
+                Cpu:     1
+                Memory:  512M
+            Volume Mounts:
+              Mount Path:  /logs
+              Name:        volume
+              Sub Path:    submarine-tensorboard/ddp-example
+          Volumes:
+            Name:  volume
+            Persistent Volume Claim:
+              Claim Name:  submarine-tensorboard-pvc
+    Worker:
+      Replicas:        3
+      Restart Policy:  OnFailure
+      Template:
+        Spec:
+          Containers:
+            Command:
+              python
+              /opt/mnist_distributed.py
+            Env:
+              Name:   ENV_1
+              Value:  ENV1
+              Name:   JOB_ID
+              Value:  experiment-1658207605530-0005
+              Name:   SUBMARINE_TRACKING_URI
+              Value:  mysql+pymysql://submarine:password@submarine-database:3306/submarine
+              Name:   SUBMARINE_TENSORBOARD_LOG_DIR
+              Value:  /logs/mylog
+            Image:    0yukali0/ddp:0.7.0_nn_data
+            Name:     pytorch
+            Resources:
+              Limits:
+                Cpu:     1
+                Memory:  1024M
+              Requests:
+                Cpu:     1
+                Memory:  512M
+            Volume Mounts:
+              Mount Path:  /logs
+              Name:        volume
+              Sub Path:    submarine-tensorboard/ddp-example
+          Volumes:
+            Name:  volume
+            Persistent Volume Claim:
+              Claim Name:  submarine-tensorboard-pvc
+Status:
+  Completion Time:  2022-07-19T06:09:29Z
+  Conditions:
+    Last Transition Time:  2022-07-19T05:59:54Z
+    Last Update Time:      2022-07-19T05:59:54Z
+    Message:               PyTorchJob experiment-1658207605530-0005 is created.
+    Reason:                PyTorchJobCreated
+    Status:                True
+    Type:                  Created
+    Last Transition Time:  2022-07-19T05:59:59Z
+    Last Update Time:      2022-07-19T05:59:59Z
+    Message:               PyTorchJob experiment-1658207605530-0005 is running.
+    Reason:                PyTorchJobRunning
+    Status:                False
+    Type:                  Running
+    Last Transition Time:  2022-07-19T06:09:29Z
+    Last Update Time:      2022-07-19T06:09:29Z
+    Message:               PyTorchJob experiment-1658207605530-0005 is successfully completed.
+    Reason:                PyTorchJobSucceeded
+    Status:                True
+    Type:                  Succeeded
+  Replica Statuses:
+    Master:
+      Succeeded:  1
+    Worker:
+      Succeeded:  3
+  Start Time:     2022-07-19T05:59:54Z
+Events:
+  Type    Reason                   Age    From              Message
+  ----    ------                   ----   ----              -------
+  Normal  SuccessfulCreatePod      16m    pytorch-operator  Created pod: experiment-1658207605530-0005-master-0
+  Normal  SuccessfulCreateService  16m    pytorch-operator  Created service: experiment-1658207605530-0005-master-0
+  Normal  SuccessfulCreatePod      16m    pytorch-operator  Created pod: experiment-1658207605530-0005-worker-0
+  Normal  SuccessfulCreatePod      16m    pytorch-operator  Created pod: experiment-1658207605530-0005-worker-1
+  Normal  SuccessfulCreatePod      16m    pytorch-operator  Created pod: experiment-1658207605530-0005-worker-2
+  Normal  PyTorchJobSucceeded      6m51s  pytorch-operator  PyTorchJob experiment-1658207605530-0005 is successfully completed.

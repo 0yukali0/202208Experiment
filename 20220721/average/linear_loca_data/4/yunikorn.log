@@ -1,0 +1,164 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2022-07-18T18:22:32Z"
+    generateName: yunikorn-scheduler-c7579799d-
+    labels:
+      app: yunikorn
+      component: yunikorn-scheduler
+      pod-template-hash: c7579799d
+      release: yunikorn
+    name: yunikorn-scheduler-c7579799d-rx7sn
+    namespace: yunikorn
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: yunikorn-scheduler-c7579799d
+      uid: e755db91-5463-4f42-87b1-78eb6beeed31
+    resourceVersion: "3986739"
+    selfLink: /api/v1/namespaces/yunikorn/pods/yunikorn-scheduler-c7579799d-rx7sn
+    uid: 0e96e58c-9079-452a-8157-5e492421d322
+  spec:
+    containers:
+    - env:
+      - name: NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: SERVICE_ACCOUNT_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: spec.serviceAccountName
+      - name: USER_LABEL_KEY
+      - name: OPERATOR_PLUGINS
+        value: general
+      - name: PLACEHOLDER_IMAGE
+        value: k8s.gcr.io/pause
+      image: apache/yunikorn:scheduler-latest
+      imagePullPolicy: Never
+      name: yunikorn-scheduler-k8s
+      ports:
+      - containerPort: 9080
+        name: http1
+        protocol: TCP
+      resources:
+        limits:
+          cpu: "4"
+          memory: 4Gi
+        requests:
+          cpu: "4"
+          memory: 4Gi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/yunikorn/
+        name: config-volume
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: yunikorn-admin-token-b9x7r
+        readOnly: true
+    - image: apache/yunikorn:web-latest
+      imagePullPolicy: Never
+      name: yunikorn-scheduler-web
+      ports:
+      - containerPort: 9889
+        name: http2
+        protocol: TCP
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: yunikorn-admin-token-b9x7r
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: blade02-k205-lab
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: yunikorn-admin
+    serviceAccountName: yunikorn-admin
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: yunikorn-configs
+      name: config-volume
+    - name: yunikorn-admin-token-b9x7r
+      secret:
+        defaultMode: 420
+        secretName: yunikorn-admin-token-b9x7r
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-18T18:22:32Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-18T18:22:37Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-18T18:22:37Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2022-07-18T18:22:32Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://79a8ea579061c370ec03a546b7693aeb71d72423ba74cf266fb868d0e6cb294b
+      image: apache/yunikorn:scheduler-latest
+      imageID: docker://sha256:4fd9f89cb1d4d564be3e95f304e92235a3facf7a65fd8ff84df13dd3b183d34d
+      lastState: {}
+      name: yunikorn-scheduler-k8s
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-18T18:22:35Z"
+    - containerID: docker://52fd9b21f40c93cbc00e43a29fb2b455e2b21b7b05ddf3cb68263716e47e2f4a
+      image: apache/yunikorn:web-latest
+      imageID: docker://sha256:67b2d3e83c4d2c363ea43916cb836e3f0be0b4f12f96ff4fbc8137f37787d725
+      lastState: {}
+      name: yunikorn-scheduler-web
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2022-07-18T18:22:36Z"
+    hostIP: 120.108.205.162
+    phase: Running
+    podIP: 10.244.0.194
+    podIPs:
+    - ip: 10.244.0.194
+    qosClass: Burstable
+    startTime: "2022-07-18T18:22:32Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
